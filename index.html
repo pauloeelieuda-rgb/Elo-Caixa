@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123f2a"><meta name="description" content="ELO Financeiro">
+<title>ELO Financeiro</title><link rel="manifest" href="./manifest.json"><link rel="icon" href="./icon-192.png">
+<style>
+:root{--forest:#123f2a;--green:#1d6948;--mint:#e9f2ec;--paper:#f5f8f5;--ink:#203027;--muted:#68766d;--line:#dce6df;--gold:#c5a66a}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 Arial,Helvetica,sans-serif}
+#splash{position:fixed;inset:0;background:linear-gradient(145deg,#0d2e20,#1c6544);color:white;display:flex;align-items:center;justify-content:center;z-index:10;text-align:center;transition:opacity .45s}
+.splash-inner{padding:28px}.splash-mark{width:82px;height:82px;border:2px solid #d6c08c;border-radius:24px;display:grid;place-items:center;margin:0 auto 20px;font-size:31px;font-weight:800;letter-spacing:-3px;color:#fff}
+.splash-inner h1{font-size:27px;letter-spacing:3px;margin:0}.splash-inner p{font-size:11px;letter-spacing:2px;color:#d7e7dc;margin-top:9px}
+header{background:var(--forest);color:white;padding:19px 18px 22px;text-align:center}
+.brand{font-size:22px;font-weight:800;letter-spacing:2px}.brand span{color:#d6c08c}.subtitle{font-size:11px;letter-spacing:1.5px;color:#d9e7dd;margin-top:5px}
+main{max-width:920px;margin:auto;padding:17px}.home-title{margin:8px 0 15px;color:var(--forest);font-size:20px}
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.home-card{background:white;border:1px solid var(--line);border-radius:17px;padding:22px 17px;text-align:left;box-shadow:0 7px 22px #123f2a0c;min-height:145px;cursor:pointer;color:var(--forest)}
+.home-card .symbol{width:42px;height:42px;border-radius:13px;background:var(--mint);display:grid;place-items:center;font-size:21px;margin-bottom:15px}
+.home-card b{display:block;font-size:17px}.home-card small{display:block;color:var(--muted);margin-top:5px;font-size:12px}
+.page{display:none}.page.active{display:block}.topline{display:flex;align-items:center;gap:12px;margin:3px 0 15px}.back{background:#e5eee8;color:var(--forest);padding:9px 13px}.topline h2{margin:0;color:var(--forest);font-size:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;margin:13px 0;box-shadow:0 5px 18px #123f2a08}
+h3{color:var(--forest);font-size:15px;margin:17px 0 10px}.section-intro{color:var(--muted);font-size:12px;margin:-7px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{min-width:0}label{display:block;font-size:12px;font-weight:700;color:#435148;margin-bottom:6px}
+input,select{width:100%;border:1px solid #cbd8cf;border-radius:9px;background:#fff;padding:12px 11px;font-size:15px;color:var(--ink);min-height:44px}
+input:focus,select:focus{outline:2px solid #a9c9b4;border-color:var(--green)}
+button{border:0;border-radius:10px;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer}
+.primary{background:var(--forest);color:white}.secondary{background:#e7efe9;color:var(--forest)}.full{width:100%}
+.percent-hint{font-size:11px;color:var(--muted);margin-top:5px}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--line);background:#f8faf8;border-radius:11px;padding:12px}.metric small{display:block;color:var(--muted);font-size:11px}.metric strong{display:block;color:var(--forest);font-size:18px;margin-top:5px;overflow-wrap:anywhere}
+.alternatives{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sim{border:1px solid var(--line);border-radius:11px;padding:13px;background:#fbfdfb}.sim b{font-size:12px;color:#44564a}.sim strong{display:block;color:var(--forest);font-size:17px;margin:8px 0}.note{font-size:12px;color:var(--muted);line-height:1.5}
+.bottom-action{position:sticky;bottom:0;background:linear-gradient(transparent,#f5f8f5 18%);padding:22px 0 8px;margin-top:10px}
+.entry{padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}.entry:last-child{border:0}
+.receipt{display:none}.print-title{text-align:center;color:var(--forest);border-bottom:2px solid var(--forest);padding-bottom:12px;margin-bottom:18px}
+.stamp{display:inline-block;border:2px solid var(--green);color:var(--green);padding:8px 13px;transform:rotate(-4deg);font-weight:bold;text-align:center;margin-top:17px}
+.signatures{display:grid;grid-template-columns:1fr 1fr;gap:35px;margin-top:65px;text-align:center}.signature-line{border-top:1px solid #333;padding-top:8px;font-size:12px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:22px}
+@media(max-width:620px){main{padding:12px}.grid,.metrics,.alternatives{grid-template-columns:1fr}.home-cards{gap:10px}.home-card{padding:17px 13px;min-height:135px}.home-card b{font-size:15px}}
+@media print{body{background:white}header,.no-print,footer{display:none!important}main{max-width:none;padding:0}.page{display:none!important}.page.printing{display:block!important}.card{border:0;box-shadow:none;padding:0}.receipt{display:block}.receipt-doc{display:block!important}#quitacao .card:not(#quitacaoDocumento){display:none!important}.print-title h1{margin:0}.print-title p{margin:5px 0 0}.metrics{grid-template-columns:1fr 1fr}.signatures{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div id="splash"><div class="splash-inner"><div class="splash-mark">ELO</div><h1>ELO FINANCEIRO</h1><p>GESTÃO • CONTROLE • RESULTADOS</p></div></div>
+<header><div class="brand">ELO <span>FINANCEIRO</span></div><div class="subtitle">CONTROLE DE COMISSÕES E DEMONSTRATIVOS</div></header>
+<main>
+<section id="home" class="page active">
+<h2 class="home-title">Página inicial</h2>
+<div class="home-cards">
+<button class="home-card" onclick="openPage('livro')"><span class="symbol">▤</span><b>Livro-caixa</b><small>Registrar negociação e calcular valores</small></button>
+<button class="home-card" onclick="openPage('contra')"><span class="symbol">▧</span><b>Contracheque</b><small>Emitir demonstrativo de comissão</small></button>
+<button class="home-card" onclick="openPage('quitacao')"><span class="symbol">✓</span><b>Quitação</b><small>Comprovar pagamento total do contrato</small></button>
+</div>
+<p class="note" style="margin-top:17px">Escolha uma área para começar.</p>
+</section>
+
+<section id="livro" class="page">
+<div class="topline no-print"><button class="back" onclick="openPage('home')">← Voltar</button><h2>Livro-caixa</h2></div>
+<div class="card">
+<h3>1. Dados do colaborador</h3>
+<div class="grid">
+<div class="field"><label for="colaborador">Nome do colaborador</label><input id="colaborador" placeholder="Nome completo"></div>
+<div class="field"><label for="codigo">Código ELO</label><input id="codigo" placeholder="Ex.: ELO001"></div>
+<div class="field"><label for="dataNegociacao">Data da negociação</label><input id="dataNegociacao" type="date"></div>
+</div>
+<h3>2. Dados do pagador</h3>
+<div class="field"><label for="tipoPagador">Quem realizará o pagamento?</label><select id="tipoPagador" onchange="alternarPagador()"><option value="B2B">Empresa (B2B)</option><option value="B2C">Pessoa física (B2C)</option></select></div>
+<div id="camposEmpresa">
+<div class="grid" style="margin-top:12px">
+<div class="field"><label for="empresa">Nome da empresa</label><input id="empresa" placeholder="Razão social ou nome fantasia"></div>
+<div class="field"><label for="responsavel">Nome do responsável pelo pagamento</label><input id="responsavel" placeholder="Nome completo"></div>
+<div class="field"><label for="funcao">Função do responsável</label><select id="funcao"><option value="">Selecione a função</option><option>Gerência</option><option>Recursos Humanos (RH)</option><option>Gestor</option><option>Diretor</option><option>Financeiro</option><option>Administrativo</option><option>Departamento de compras</option><option>Proprietário</option><option>Coordenação</option><option>Supervisão</option><option>Outro</option></select></div>
+<div class="field"><label for="funcaoOutra">Outra função (se selecionou Outro)</label><input id="funcaoOutra" placeholder="Informe a função" disabled></div>
+<div class="field"><label for="telefone">Telefone / WhatsApp do responsável</label><input id="telefone" type="tel" placeholder="(00) 00000-0000"></div>
+</div></div>
+<div id="camposPessoa" hidden style="margin-top:12px"><div class="grid">
+<div class="field"><label for="nomePessoa">Nome da pessoa que vai pagar</label><input id="nomePessoa" placeholder="Nome completo"></div>
+<div class="field"><label for="telefonePessoa">Telefone / WhatsApp</label><input id="telefonePessoa" type="tel" placeholder="(00) 00000-0000"></div>
+</div></div>
+<h3>3. Valores e percentuais</h3>
+<div class="grid">
+<div class="field"><label for="total">Valor total do contrato (R$)</label><input id="total" type="number" min="0.01" step="0.01" placeholder="0,00"></div>
+<div class="field"><label for="percentualSinal">Percentual do sinal</label><select id="percentualSinal"></select><div class="percent-hint">Escolha de 40% a 50%.</div></div>
+<div class="field"><label for="percentualComissao">Comissão do colaborador</label><select id="percentualComissao"></select><div class="percent-hint">Escolha de 10% a 30%.</div></div>
+</div>
+</div>
+<div class="card">
+<h3>Resumo e simulações</h3>
+<div class="metrics">
+<div class="metric"><small>Valor total do contrato</small><strong id="vTotal">R$ 0,00</strong></div>
+<div class="metric"><small>Sinal previsto</small><strong id="vSinal">R$ 0,00</strong></div>
+<div class="metric"><small>Valor restante a pagar</small><strong id="vRestante">R$ 0,00</strong></div>
+<div class="metric"><small>Comissão total sobre o contrato</small><strong id="vComissao">R$ 0,00</strong></div>
+</div>
+<h3>Duas alternativas para descontar a comissão</h3>
+<div class="alternatives">
+<div class="sim"><b>Alternativa 1 — descontar do sinal</b><strong id="altSinal">Saldo do sinal: R$ 0,00</strong><span class="note" id="descSinal"></span></div>
+<div class="sim"><b>Alternativa 2 — descontar do restante</b><strong id="altRestante">Saldo restante: R$ 0,00</strong><span class="note" id="descRestante"></span></div>
+</div>
+<p class="note">A comissão é calculada uma única vez sobre o valor total do contrato. As duas opções são alternativas: não são dois descontos acumulados.</p>
+<div class="metric"><small>Total líquido após uma comissão</small><strong id="vLiquido">R$ 0,00</strong></div>
+</div>
+<div class="bottom-action no-print"><button class="primary full" onclick="gerarLivroPDF()">GERAR PDF DO LIVRO-CAIXA</button><button class="secondary full" style="margin-top:9px" onclick="imprimirRecibo()">GERAR RECIBO DE SINAL PARA A EMPRESA</button></div>
+</section>
+
+
+<section id="recibo" class="page">
+<div class="topline no-print"><button class="back" onclick="openPage('livro')">← Voltar</button><h2>Recibo para a empresa</h2></div>
+<div class="card receipt-doc" id="reciboDocumento">
+<div class="print-title"><h1>ELO</h1><p>RECIBO DE RECEBIMENTO DE SINAL</p></div>
+<p><b>Recebedora:</b> ELO</p>
+<p><b>Pagador:</b> <span id="recPagador">—</span></p>
+<p><b>Responsável pelo pagamento:</b> <span id="recResponsavel">—</span></p>
+<p><b>Telefone / WhatsApp:</b> <span id="recTelefone">—</span></p>
+<p><b>Data da negociação:</b> <span id="recDataNegociacao">—</span></p>
+<hr>
+<p><b>Valor total do contrato:</b> <span id="recTotal">R$ 0,00</span></p>
+<p><b>Sinal recebido (<span id="recPercentual">40%</span>):</b> <span id="recSinal">R$ 0,00</span></p>
+<p><b>Valor restante a pagar:</b> <span id="recRestante">R$ 0,00</span></p>
+<p style="margin-top:22px">Declaramos, para fins de comprovação, o recebimento do valor de sinal acima indicado, referente ao contrato identificado neste documento. O saldo restante permanece pendente de pagamento, conforme demonstrado.</p>
+<p><b>Recebido por:</b> ELO – Financeiro</p>
+<p><b>Data e hora de emissão:</b> <span id="recEmissao">—</span></p>
+<div class="signatures" style="grid-template-columns:1fr;margin-top:55px">
+<div class="signature-line">ELO – Financeiro<br>Confirmação de recebimento</div>
+</div>
+<p class="note" style="margin-top:25px">Este documento é um comprovante interno de recebimento do sinal informado no lançamento. Não substitui contrato, nota fiscal ou comprovante bancário.</p>
+</div>
+<div class="no-print"><button class="primary full" onclick="imprimirRecibo()">IMPRIMIR / SALVAR RECIBO EM PDF</button></div>
+</section>
+
+
+<section id="quitacao" class="page">
+<div class="topline no-print"><button class="back" onclick="openPage('home')">← Voltar</button><h2>Recibo de quitação</h2></div>
+<div class="card no-print">
+<h3>Dados do contrato e dos pagamentos</h3>
+<p class="note">Preencha novamente os dados usando o recibo de sinal anterior como referência. O comprovante só será emitido quando o sinal recebido e o pagamento final totalizarem o valor do contrato.</p>
+<div class="grid">
+<div class="field"><label for="qTipo">Tipo de pagador</label><select id="qTipo"><option value="Empresa">Empresa (B2B)</option><option value="Pessoa física">Pessoa física (B2C)</option></select></div>
+<div class="field"><label for="qPagador">Nome da empresa ou pessoa pagadora</label><input id="qPagador" placeholder="Nome completo ou razão social"></div>
+<div class="field"><label for="qResponsavel">Responsável pelo pagamento (se empresa)</label><input id="qResponsavel" placeholder="Nome do responsável"></div>
+<div class="field"><label for="qData">Data do pagamento final</label><input id="qData" type="date"></div>
+<div class="field"><label for="qTotal">Valor total do contrato (R$)</label><input id="qTotal" type="number" min="0.01" step="0.01" placeholder="0,00"></div>
+<div class="field"><label for="qSinal">Sinal já recebido (R$)</label><input id="qSinal" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div class="field"><label for="qFinal">Pagamento do saldo final (R$)</label><input id="qFinal" type="number" min="0" step="0.01" placeholder="0,00"></div>
+</div>
+<div class="bottom-action"><button class="primary full" onclick="gerarQuitacao()">GERAR RECIBO DE QUITAÇÃO EM PDF</button></div>
+</div>
+<div class="card" id="quitacaoDocumento">
+<div class="print-title"><h1>ELO | FINANCEIRO</h1><p>RECIBO DE QUITAÇÃO</p></div>
+<p><b>Empresa recebedora:</b> ELO</p>
+<p><b>Pagador:</b> <span id="qPrintPagador">—</span></p>
+<p><b>Responsável pelo pagamento:</b> <span id="qPrintResponsavel">—</span></p>
+<p><b>Tipo de pagador:</b> <span id="qPrintTipo">—</span></p>
+<p><b>Data do pagamento final:</b> <span id="qPrintData">—</span></p><hr>
+<p><b>Valor total do contrato:</b> <span id="qPrintTotal">R$ 0,00</span></p>
+<p><b>Sinal anteriormente recebido:</b> <span id="qPrintSinal">R$ 0,00</span></p>
+<p><b>Pagamento final recebido:</b> <span id="qPrintFinal">R$ 0,00</span></p>
+<p><b>Total recebido pela ELO:</b> <span id="qPrintRecebido">R$ 0,00</span></p>
+<p><b>Saldo pendente:</b> <span id="qPrintSaldo">R$ 0,00</span></p>
+<div style="margin-top:22px;border:2px solid #1d6948;border-radius:12px;padding:14px;text-align:center;color:#123f2a;font-size:20px;font-weight:800">CONTRATO TOTALMENTE QUITADO</div>
+<p style="margin-top:22px">Declaramos o recebimento integral do valor do contrato identificado neste documento, incluindo o sinal anteriormente recebido e o pagamento final acima indicado, não restando saldo pendente referente a este contrato.</p>
+<p><b>Recebido por:</b> ELO – Financeiro</p><p><b>Data e hora de emissão:</b> <span id="qPrintEmissao">—</span></p>
+<div class="signatures" style="grid-template-columns:1fr;margin-top:55px"><div class="signature-line">ELO – Financeiro<br>Confirmação de quitação</div></div>
+<p class="note" style="margin-top:25px">Este documento comprova os valores informados neste recibo. Guarde-o junto ao contrato e aos comprovantes dos pagamentos.</p>
+</div></section>
+\n<section id="contra" class="page">
+<div class="topline no-print"><button class="back" onclick="openPage('home')">← Voltar</button><h2>Contracheque</h2></div>
+<div class="card no-print">
+<h3>Selecionar lançamento desta sessão</h3>
+<label for="selecionarLancamento">Negociação</label><select id="selecionarLancamento" onchange="preencherContracheque()"><option value="">Nenhum lançamento disponível</option></select>
+<p class="note">O contracheque usa os dados calculados no Livro-caixa nesta sessão. Nada fica gravado permanentemente no aparelho.</p>
+<div class="bottom-action"><button class="primary full" onclick="imprimirContracheque()">IMPRIMIR / SALVAR CONTRACHEQUE EM PDF</button></div>
+</div>
+<div class="card" id="contrachequeDocumento">
+<div class="receipt print-title"><h1>ELO | FINANCEIRO</h1><p>DEMONSTRATIVO DE COMISSÃO / CONTRACHEQUE</p></div>
+<h3 class="no-print">Pré-visualização do contracheque</h3>
+<div class="metrics">
+<div class="metric"><small>Colaborador</small><strong id="contraNome">—</strong></div>
+<div class="metric"><small>Código ELO</small><strong id="contraCodigo">—</strong></div>
+<div class="metric"><small>Comissão</small><strong id="contraValor">R$ 0,00</strong></div>
+<div class="metric"><small>Data e hora de emissão</small><strong id="contraData">—</strong></div>
+</div>
+<div class="receipt">
+<p><b>Colaborador:</b> <span id="printNome">—</span></p><p><b>Código ELO:</b> <span id="printCodigo">—</span></p>
+<p><b>Valor da comissão:</b> <span id="printValor">R$ 0,00</span></p><p><b>Data e hora de emissão:</b> <span id="printData">—</span></p>
+<p style="margin-top:24px">Responsável pelo financeiro:</p>
+<div style="font-family:cursive;font-size:25px;color:#123f2a">Paulo junio de sousa silva</div>
+<div class="stamp">PAULO JUNIO<br>FINANCEIRO – ELO</div>
+<div class="signatures">
+<div class="signature-line">Paulo junio de sousa silva<br>Responsável pelo Financeiro – ELO</div>
+<div class="signature-line"><span id="printNomeAss">Colaborador</span><br>Assinatura do colaborador</div>
+</div>
+</div>
+</div>
+</section>
+</main><footer>ELO • Aplicativo interno de controle financeiro</footer>
+<script>
+const sessoes=[];
+let calculo=null;
+const el=id=>document.getElementById(id);
+const moeda=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function abrirSplash(){setTimeout(()=>{const s=el('splash');s.style.opacity='0';setTimeout(()=>s.remove(),480)},1500)}
+function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active','printing'));el(id).classList.add('active');window.scrollTo(0,0)}
+function preencherPercentuais(id){const s=el(id);s.innerHTML='';const inicio=id==='percentualSinal'?40:10;const fim=id==='percentualSinal'?50:30;for(let n=inicio;n<=fim;n++){const o=document.createElement('option');o.value=n;o.textContent=n+'%';if(n===(id==='percentualSinal'?40:10))o.selected=true;s.append(o)}}
+function alternarPagador(){const empresa=el('tipoPagador').value==='B2B';el('camposEmpresa').hidden=!empresa;el('camposPessoa').hidden=empresa}
+el('funcao').addEventListener('change',()=>{el('funcaoOutra').disabled=el('funcao').value!=='Outro';if(el('funcao').value!=='Outro')el('funcaoOutra').value=''});
+function dadosFormulario(){
+ const total=Number(el('total').value),pSinal=Number(el('percentualSinal').value),pComissao=Number(el('percentualComissao').value);
+ if(!el('colaborador').value.trim()||!el('codigo').value.trim()||!el('dataNegociacao').value){alert('Preencha nome, código ELO e data da negociação.');return null}
+ if(!(total>0)){alert('Informe o valor total do contrato.');return null}
+ const b2b=el('tipoPagador').value==='B2B';
+ const pagador=b2b?el('empresa').value.trim():el('nomePessoa').value.trim();
+ if(!pagador){alert(b2b?'Informe o nome da empresa.':'Informe o nome da pessoa pagadora.');return null}
+ if(b2b&&(!el('responsavel').value.trim()||!el('funcao').value)){alert('Informe o responsável pelo pagamento e a função dele.');return null}
+ const sinal=total*pSinal/100,restante=total-sinal,comissao=total*pComissao/100;
+ return {id:String(Date.now()),colaborador:el('colaborador').value.trim(),codigo:el('codigo').value.trim(),data:el('dataNegociacao').value,tipo:b2b?'B2B':'B2C',pagador,responsavel:b2b?el('responsavel').value.trim():el('nomePessoa').value.trim(),funcao:b2b?(el('funcao').value==='Outro'?el('funcaoOutra').value:el('funcao').value):'Pessoa física',telefone:b2b?el('telefone').value:el('telefonePessoa').value,total,pSinal,pComissao,sinal,restante,comissao,saldoSinal:sinal-comissao,saldoRestante:restante-comissao,liquido:total-comissao};
+}
+function mostrar(x){calculo=x;el('vTotal').textContent=moeda(x.total);el('vSinal').textContent=moeda(x.sinal);el('vRestante').textContent=moeda(x.restante);el('vComissao').textContent=moeda(x.comissao);el('altSinal').textContent='Saldo do sinal: '+moeda(x.saldoSinal);el('descSinal').textContent=moeda(x.sinal)+' menos a comissão integral de '+moeda(x.comissao);el('altRestante').textContent='Saldo restante: '+moeda(x.saldoRestante);el('descRestante').textContent=moeda(x.restante)+' menos a comissão integral de '+moeda(x.comissao);el('vLiquido').textContent=moeda(x.liquido)}
+function atualizarContracheque(){const s=el('selecionarLancamento');s.innerHTML='<option value="">Selecione uma negociação desta sessão</option>';sessoes.forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=x.colaborador+' — '+x.codigo+' — '+moeda(x.comissao);s.append(o)})}
+function atual(){return sessoes.find(x=>x.id===el('selecionarLancamento').value)}
+function preencherContracheque(){const x=atual();if(!x)return;const agora=new Date().toLocaleString('pt-BR');el('contraNome').textContent=el('printNome').textContent=x.colaborador;el('contraCodigo').textContent=el('printCodigo').textContent=x.codigo;el('contraValor').textContent=el('printValor').textContent=moeda(x.comissao);el('contraData').textContent=el('printData').textContent=agora;el('printNomeAss').textContent=x.colaborador}
+function limparLivro(){['colaborador','codigo','dataNegociacao','empresa','responsavel','funcaoOutra','telefone','nomePessoa','telefonePessoa','total'].forEach(id=>el(id).value='');el('tipoPagador').value='B2B';el('funcao').value='';el('funcaoOutra').disabled=true;el('percentualSinal').value='40';el('percentualComissao').value='10';alternarPagador();mostrar({total:0,sinal:0,restante:0,comissao:0,saldoSinal:0,saldoRestante:0,liquido:0})}
+function gerarLivroPDF(){
+ const x=dadosFormulario();if(!x)return;mostrar(x);sessoes.unshift(x);atualizarContracheque();
+ el('livro').classList.add('printing');window.print();el('livro').classList.remove('printing');
+ // Mantém somente em memória, nesta sessão, para alimentar o contracheque; não grava no aparelho.
+ limparLivro();
+ alert('Relatório preparado. O formulário foi reiniciado. O lançamento fica apenas temporariamente nesta sessão para o contracheque.');
+}
+
+function imprimirRecibo(){
+ const x=sessoes[0];
+ if(!x){alert('Gere primeiro o Livro-caixa para criar o recibo da empresa.');return}
+ const dataNeg=x.data?new Date(x.data+'T12:00:00').toLocaleDateString('pt-BR'):'—';
+ el('recPagador').textContent=x.pagador;
+ el('recResponsavel').textContent=x.responsavel||'—';
+ el('recTelefone').textContent=x.telefone||'—';
+ el('recDataNegociacao').textContent=dataNeg;
+ el('recTotal').textContent=moeda(x.total);
+ el('recPercentual').textContent=x.pSinal+'%';
+ el('recSinal').textContent=moeda(x.sinal);
+ el('recRestante').textContent=moeda(x.restante);
+ el('recEmissao').textContent=new Date().toLocaleString('pt-BR');
+ el('recibo').classList.add('printing');
+ window.print();
+ el('recibo').classList.remove('printing');
+}
+
+
+function gerarQuitacao(){
+ const tipo=el('qTipo').value, pagador=el('qPagador').value.trim(), responsavel=el('qResponsavel').value.trim();
+ const data=el('qData').value, total=Number(el('qTotal').value), sinal=Number(el('qSinal').value), final=Number(el('qFinal').value);
+ if(!pagador||!data||!(total>0)||sinal<0||final<0){alert('Preencha o pagador, a data e todos os valores corretamente.');return}
+ if(tipo==='Empresa'&&!responsavel){alert('Informe o responsável pelo pagamento da empresa.');return}
+ const recebido=sinal+final, saldo=total-recebido;
+ if(Math.abs(saldo)>0.01){alert('Os pagamentos ainda não correspondem ao valor total do contrato. Confira o sinal e o pagamento final. Saldo calculado: '+moeda(Math.max(0,saldo)));return}
+ el('qPrintPagador').textContent=pagador; el('qPrintResponsavel').textContent=responsavel||'Não informado';
+ el('qPrintTipo').textContent=tipo; el('qPrintData').textContent=new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
+ el('qPrintTotal').textContent=moeda(total); el('qPrintSinal').textContent=moeda(sinal);
+ el('qPrintFinal').textContent=moeda(final); el('qPrintRecebido').textContent=moeda(recebido);
+ el('qPrintSaldo').textContent=moeda(0); el('qPrintEmissao').textContent=new Date().toLocaleString('pt-BR');
+ el('quitacao').classList.add('printing'); window.print(); el('quitacao').classList.remove('printing');
+}
+\nfunction imprimirContracheque(){if(!atual()){alert('Não há lançamento disponível. Gere primeiro um Livro-caixa nesta sessão.');return}preencherContracheque();el('contra').classList.add('printing');window.print();el('contra').classList.remove('printing');sessoes.length=0;atualizarContracheque();el('selecionarLancamento').value='';['contraNome','contraCodigo','contraData','printNome','printCodigo','printData','printNomeAss'].forEach(id=>el(id).textContent='—');el('contraValor').textContent=el('printValor').textContent='R$ 0,00';limparLivro();openPage('home');alert('Contracheque preparado. Os dados temporários foram apagados e o aplicativo voltou à página inicial.')}
+preencherPercentuais('percentualSinal');preencherPercentuais('percentualComissao');alternarPagador();abrirSplash();
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>console.log('Service Worker:',e)));
+</script></body></html>
